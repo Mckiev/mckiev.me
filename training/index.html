@@ -18,7 +18,15 @@
     history.replaceState(null, "", location.pathname);
     document.documentElement.className = "install";
   } else {
-    location.replace("https://claude.ai/artifact/69pbB2jivPvas516c85t9S");
+    // iOS opens claude.ai links in the Claude app (universal links). x-safari-https:// forces a Safari tab;
+    // if the scheme isn't handled (non-iOS / old iOS), fall back to the normal URL.
+    var u = "https://claude.ai/artifact/69pbB2jivPvas516c85t9S";
+    if (/iPhone|iPad|iPod/.test(navigator.userAgent) && !/[?&]app=1/.test(location.search)) {
+      location.href = "x-safari-" + u;
+      setTimeout(function () { if (document.visibilityState === "visible") location.replace(u); }, 1500);
+    } else {
+      location.replace(u);
+    }
   }
 </script>
 <style>
